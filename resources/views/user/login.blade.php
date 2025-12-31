@@ -28,8 +28,8 @@
             <form class="p-4 p-md-5 border rounded-3 bg-light" method="post" action="/login">
                 @csrf
                 <div class="form-floating mb-3">
-                    <input name="user" type="text" class="form-control" id="user" placeholder="id">
-                    <label for="user">User</label>
+                    <input name="email" type="email" class="form-control" id="email" placeholder="id">
+                    <label for="email">Email</label>
                 </div>
                 <div class="form-floating mb-3">
                     <input name="password" type="password" class="form-control" id="password" placeholder="password">

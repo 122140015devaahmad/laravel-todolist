@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use Database\Seeders\UserSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -13,36 +14,37 @@ class UserControllerTest extends TestCase
     }
     public function testLoginPageForMember(){
         $this->withSession([
-            'user'=>'admin'
+            'email'=>'admin'
         ])->get('/login')->assertRedirect('/');
     }
     public function testDoLoginSuccess(){
+        $this->seed([UserSeeder::class]);
         $this->post('/login', [
-            "user"=>"admin", "password"=>"admin123"
+            "email"=>"admin@gmail.com", "password"=>"rahasia"
         ])->assertRedirect('/');
     }
     public function testDoLoginAlready(){
         $this->withSession([
-            'user'=>'admin'
+            'email'=>'admin'
         ])->post('/login', [
-            "user"=>"admin", "password"=>"admin123"
+            "email"=>"admin", "password"=>"admin123"
         ])->assertRedirect('/');
     }
     public function testDoLoginEmpty(){
         $this->post('/login', [
-            "user"=>"", "password"=>""
+            "email"=>"", "password"=>""
         ])
-        ->assertSeeText('User or Password is empty');
+        ->assertSeeText('Email or Password is empty');
     }
     public function testDoLoginFalse(){
         $this->post('/login', [
-            "user"=>"admin", "password"=>"fufufafa"
+            "email"=>"admin", "password"=>"fufufafa"
         ])
-        ->assertSeeText('User or Password is incorrect');
+        ->assertSeeText('Email or Password is incorrect');
     }
     public function testDoLogout(){
         $this->withSession([
-            'user'=>'admin'
+            'email'=>'admin'
         ])->post('/logout')->assertRedirect('/')->assertSessionMissing('user');
     }
     public function testDoLogoutForGuest(){

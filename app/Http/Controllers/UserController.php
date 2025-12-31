@@ -20,27 +20,27 @@ class UserController extends Controller
         ]);
     }
     public function doLogin(Request $request): Response | RedirectResponse{
-        $user = $request->input('user');
+        $email = $request->input('email');
         $password = $request->input('password');
         
-        if(empty($user) || empty($password)){
+        if(empty($email) || empty($password)){
             return response()->view('user.login',[
                 'title' => 'Login Management',
-                'error' => 'User or Password is empty'
+                'error' => 'Email or Password is empty'
             ]);
         }
 
-        if($this->userServices->login($user, $password)){
-            $request->session()->put('user', $user);
+        if($this->userServices->login($email, $password)){
+            $request->session()->put('email', $email);
             return redirect('/');
         }
         return response()->view('user.login',[
             'title' => 'Login Management',
-            'error' => 'User or Password is incorrect'
+            'error' => 'Email or Password is incorrect'
         ]);
     }
     public function doLogout(Request $request): Response | RedirectResponse{
-        $request->session()->forget('user');
+        $request->session()->forget('email');
         return redirect('/');
     }
 }

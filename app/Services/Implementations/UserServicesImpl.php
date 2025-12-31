@@ -3,17 +3,14 @@
 namespace App\Services\Implementations;
 
 use App\Services\UserServices;
+use Illuminate\Support\Facades\Auth;
 
 class UserServicesImpl implements UserServices{
-    private array $users = [
-        'admin' => 'admin123',
-        'user' => 'user123',
-    ];
-        
-    public function login(string $user, string $password): bool{
-        if(isset($this->users[$user]) && $this->users[$user] === $password){
-            return true;
-        }
-        return false;
+
+    public function login(string $email, string $password): bool{
+        return Auth::attempt([
+            "email" => $email,
+            "password" => $password
+        ]);
     }
 }

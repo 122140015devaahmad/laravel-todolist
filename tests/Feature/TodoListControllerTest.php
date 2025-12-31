@@ -2,46 +2,46 @@
 
 namespace Tests\Feature;
 
+use Database\Seeders\TodoSeeder;
+use DB;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class TodoListControllerTest extends TestCase
 {
+    protected function setUp(): void{
+        parent::setUp();
+        DB::delete("DELETE FROM todos");
+    }
     public function testTodoList(){
+        $this->seed([TodoSeeder::class]);
         $this->withSession([
-            "user"=>"user123",
-            "todolist"=>[
-                ["id"=>"1", "todo"=>"test"],
-                ["id"=>"2", "todo"=>"bejo"]
-            ]
+            "email"=>"admin@gmail.com",
         ])->get("/todolist")
         ->assertStatus(200)
         ->assertSeeText("1")
-        ->assertSeeText("test")
+        ->assertSeeText("belajar laravel")
         ->assertSeeText("2")
-        ->assertSeeText("bejo");
+        ->assertSeeText("belajar react");
     }
     public function testTodoListAddFailed(){
         $this->withSession([
-            "user"=>"user123",
+            "email"=>"admin@gmail.com",
         ])->post("/todolist", [])
         ->assertSeeText("Todo is required");
     }
     public function testTodoListAddSuccess(){
         $this->withSession([
-            "user"=>"user123",
+            "email"=>"admin@gmail.com",
         ])->post("/todolist", [
             "todo" => "Membaca Buku"
         ])->assertRedirect("/todolist");
     }
     public function testTodoListDelete(){
+        $this->seed([TodoSeeder::class]);
         $this->withSession([
-            "user"=>"user123",
-            "todolist"=>[
-                ["id"=>"1", "todo"=>"test"],
-                ["id"=>"2", "todo"=>"bejo"]
-            ]
-        ])->post("/todolist/1/delete")->assertRedirect("/todolist");
+            "email"=>"admin@gmail.com",
+        ])->post("/todolist/12345/delete")->assertRedirect("/todolist");
     }
 }

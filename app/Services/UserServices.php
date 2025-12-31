@@ -4,5 +4,5 @@ namespace App\Services;
 
 interface UserServices
 {
-    public function login(string $user, string $password): bool;
+    public function login(string $email, string $password): bool;
 }
